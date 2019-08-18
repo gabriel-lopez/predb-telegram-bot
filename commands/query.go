@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"bytes"
 	"log"
 	"net/http"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
@@ -17,7 +18,14 @@ func HandleCommandQuery(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.M
 		return
 	}
 
+	buf := bytes.Buffer{}
+
 	for _, row := range rows {
-		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.Formatted()))
+		buf.WriteString(row.Formatted())
+		buf.WriteString("\n")
 	}
+
+	result := buf.String()
+
+	bot.Send(tgbotapi.NewMessage(m.Chat.ID, result))
 }
