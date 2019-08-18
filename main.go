@@ -46,7 +46,7 @@ func main() {
 	updates := bot.ListenForWebhook(webhookRoot + bot.Token)
 
 	log.Print("Starting websocket")
-	API.Connect()
+	go API.Connect()
 
 	go http.ListenAndServe(":" + webhookPortListen, nil)
 
