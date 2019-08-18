@@ -1,0 +1,1 @@
+web: bin/predb-telegram-bot
