@@ -45,6 +45,9 @@ func main() {
 	log.Print("Listen for webhook")
 	updates := bot.ListenForWebhook(webhookRoot + bot.Token)
 
+	log.Print("Starting websocket")
+	API.Connect()
+
 	go http.ListenAndServe(":" + webhookPortListen, nil)
 
 	for update := range updates {
@@ -58,8 +61,6 @@ func main() {
 			log.Printf("%+v\n", update)
 		}
 	}
-
-	API.Connect()
 }
 
 var replacer = strings.NewReplacer("(", "\\(", ")", "\\)")
