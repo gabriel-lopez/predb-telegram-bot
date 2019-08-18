@@ -14,7 +14,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
 
-	C "./commands"
+	C "github.com/gabriel-lopez/predb-telegram-bot/commands"
 )
 
 type apiResponse struct {
