@@ -24,7 +24,7 @@ var conn = evtwebsocket.Conn {
 }
 
 func Connect() {
-	err := conn.Dial("https://predb.ovh/api/v1/ws", "")
+	err := conn.Dial("ws://predb.ovh/api/v1/ws", "")
 	if err != nil {
 		log.Fatal(err)
 	}
