@@ -13,6 +13,8 @@ import (
 	
 	_ "github.com/joho/godotenv/autoload"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
+
+	C "./commands"
 )
 
 type apiResponse struct {
@@ -187,7 +189,7 @@ func handleCommand(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.Messag
 
 	switch command {
 	case "start":
-		handleCommandStart(bot, m)
+		C.HandleCommandStart(bot, m)
 	case "help":
 		handleCommandHelp(bot, m)
 	case "ping":
@@ -196,18 +198,6 @@ func handleCommand(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.Messag
 		handleCommandQuery(bot, client, m, args)
 	default:
 		handleCommandUnknown(bot, m)
-	}
-}
-
-const startContent = `Hello !
-This bot has inline mode activated, feel free to query me :
-@PredbBot <query>
-Type /help for available commands.`
-
-func handleCommandStart(bot *tgbotapi.BotAPI, m *tgbotapi.Message) {
-	// /start shouldn't happen outside of private
-	if m.Chat.IsPrivate() {
-		bot.Send(tgbotapi.NewMessage(m.Chat.ID, startContent))
 	}
 }
 

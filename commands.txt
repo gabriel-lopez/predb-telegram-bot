@@ -1,0 +1,2 @@
+ping - Check bot availability
+query - Search for a pre realase name
