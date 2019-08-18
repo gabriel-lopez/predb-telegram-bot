@@ -55,7 +55,7 @@ var preAPIQuery string
 func main() {
 	log.Print("Read configuration")
 
-	webhookListen := getEnv("WEBHOOK_LISTEN", "127.0.0.1")
+	// webhookListen := getEnv("WEBHOOK_LISTEN", "127.0.0.1")
 	webhookPortListen := getEnv("PORT", "18442")	
 	webhookHost := getEnv("WEBHOOK_HOST", "")
 	webhookRoot := getEnv("WEBHOOK_ROOT", "/")
