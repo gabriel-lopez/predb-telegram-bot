@@ -76,7 +76,7 @@ func handleInline(bot *tgbotapi.BotAPI, client *http.Client, iq *tgbotapi.Inline
 
 	res := make([]interface{}, 0)
 	for i, row := range rows {
-		res = append(res, tgbotapi.NewInlineQueryResultArticle(string(i), row.Name, row.short()))
+		res = append(res, tgbotapi.NewInlineQueryResultArticle(string(i), row.Name, row.Short()))
 	}
 	answer := tgbotapi.InlineConfig{
 		InlineQueryID: iq.ID,
@@ -117,7 +117,7 @@ func handleMessage(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.Messag
 
 	log.Printf("m< Send back %d results\n", len(rows))
 	for _, row := range rows {
-		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.short()))
+		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.Short()))
 	}
 }
 
@@ -150,6 +150,6 @@ func handleCommandQuery(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.M
 	}
 
 	for _, row := range rows {
-		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.short()))
+		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.Short()))
 	}
 }

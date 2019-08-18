@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"time"
 )
 
 func getEnv(key, defaultValue string) string {
@@ -15,12 +14,4 @@ func getEnv(key, defaultValue string) string {
 		return defaultValue
 	}
 	return value
-}
-
-func (s sphinxRow) short() string {
-	return fmt.Sprintf("%s %s", s.Name, s.preAt().String())
-}
-
-func (s sphinxRow) preAt() time.Time {
-	return time.Unix(s.PreAt, 0)
 }
