@@ -2,10 +2,14 @@ package api
 
 import (
 	"fmt"
-	"time"
 	"net/http"
 	"net/url"
+	"json"
+	"log"
+	"errors"
 )
+
+var preAPIQuery = "https://predb.ovh/api/v1/?q=%s&count=%d"
 
 func QuerySphinx(client *http.Client, q string, max int) ([]sphinxRow, error) {
 	resp, err := client.Get(fmt.Sprintf(preAPIQuery, url.QueryEscape(q), max))
