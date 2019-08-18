@@ -55,7 +55,8 @@ var preAPIQuery string
 func main() {
 	log.Print("Read configuration")
 
-	webhookListen := getEnv("WEBHOOK_LISTEN", "127.0.0.1:18442")
+	webhookListen := getEnv("WEBHOOK_LISTEN", "127.0.0.1")
+	webhookPortListen := getEnv("PORT", "18442")
 	webhookHost := getEnv("WEBHOOK_HOST", "")
 	webhookRoot := getEnv("WEBHOOK_ROOT", "/")
 	botToken := getEnv("BOT_TOKEN", "")
@@ -81,7 +82,7 @@ func main() {
 
 	log.Print("Listen for webhook")
 	updates := bot.ListenForWebhook(webhookRoot + bot.Token)
-	go http.ListenAndServe(webhookListen, nil)
+	go http.ListenAndServe(webhookListen + ":" + webhookPortListen, nil)
 
 	for update := range updates {
 		if update.Message != nil {
