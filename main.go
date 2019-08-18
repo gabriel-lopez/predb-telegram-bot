@@ -14,43 +14,9 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 	tgbotapi "gopkg.in/telegram-bot-api.v4"
 
+	API "github.com/gabriel-lopez/predb-telegram-bot/api"
 	C "github.com/gabriel-lopez/predb-telegram-bot/commands"
 )
-
-type apiResponse struct {
-	Status  string     `json:"status"`
-	Message string     `json:"message"`
-	Data    apiRowData `json:"data"`
-}
-
-type apiRowData struct {
-	RowCount int         `json:"rowCount"`
-	Rows     []sphinxRow `json:"rows"`
-	Offset   int         `json:"offset"`
-	ReqCount int         `json:"reqCount"`
-	Total    int         `json:"total"`
-	Time     float64     `json:"time"`
-}
-
-type sphinxRow struct {
-	ID    int     `json:"id"`
-	Name  string  `json:"name"`
-	Team  string  `json:"team"`
-	Cat   string  `json:"cat"`
-	Genre string  `json:"genre"`
-	URL   string  `json:"url"`
-	Size  float64 `json:"size"`
-	Files int     `json:"files"`
-	PreAt int64   `json:"preAt"`
-}
-
-func (s sphinxRow) preAt() time.Time {
-	return time.Unix(s.PreAt, 0)
-}
-
-func (s sphinxRow) short() string {
-	return fmt.Sprintf("%s %s", s.Name, s.preAt().String())
-}
 
 var preAPIQuery string
 
@@ -102,34 +68,12 @@ func main() {
 
 var replacer = strings.NewReplacer("(", "\\(", ")", "\\)")
 
-func querySphinx(client *http.Client, q string, max int) ([]sphinxRow, error) {
-	resp, err := client.Get(fmt.Sprintf(preAPIQuery, url.QueryEscape(q), max))
-	if err != nil {
-		return nil, err
-	}
-
-	var api apiResponse
-
-	dec := json.NewDecoder(resp.Body)
-	err = dec.Decode(&api)
-	if err != nil {
-		return nil, err
-	}
-
-	if api.Status != "success" {
-		log.Println(resp.Body)
-		return nil, errors.New("Internal error")
-	}
-
-	return api.Data.Rows, nil
-}
-
 const inlineMaxRes = 1
 
 func handleInline(bot *tgbotapi.BotAPI, client *http.Client, iq *tgbotapi.InlineQuery) {
 	log.Printf("i> %s [%d] : %s\n", iq.From, iq.From.ID, iq.Query)
 
-	rows, err := querySphinx(client, iq.Query, inlineMaxRes)
+	rows, err := API.QuerySphinx(client, iq.Query, inlineMaxRes)
 	if err != nil {
 		log.Print(err)
 		return
@@ -170,7 +114,7 @@ func handleMessage(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.Messag
 		return
 	}
 
-	rows, err := querySphinx(client, m.Text, directMaxRes)
+	rows, err := API.QuerySphinx(client, m.Text, directMaxRes)
 	if err != nil {
 		log.Print(err)
 		return
@@ -204,7 +148,7 @@ func handleCommand(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.Messag
 const queryMaxRes = 3
 
 func handleCommandQuery(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.Message, args string) {
-	rows, err := querySphinx(client, args, queryMaxRes)
+	rows, err := API.QuerySphinx(client, args, queryMaxRes)
 	if err != nil {
 		log.Print(err)
 		return
@@ -213,15 +157,4 @@ func handleCommandQuery(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.M
 	for _, row := range rows {
 		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.short()))
 	}
-}
-
-func getEnv(key, defaultValue string) string {
-	value, exists := os.LookupEnv(key)
-	if !exists {
-		if defaultValue == "" {
-			log.Fatal("Missing mandatory env variable : " + key)
-		}
-		return defaultValue
-	}
-	return value
 }
