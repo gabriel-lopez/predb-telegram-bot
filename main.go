@@ -117,7 +117,7 @@ func handleMessage(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.Messag
 
 	log.Printf("m< Send back %d results\n", len(rows))
 	for _, row := range rows {
-		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.Short()))
+		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.Formatted()))
 	}
 }
 
@@ -134,22 +134,8 @@ func handleCommand(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.Messag
 	case "ping":
 		C.HandleCommandPing(bot, m)
 	case "query":
-		handleCommandQuery(bot, client, m, args)
+		C.HandleCommandQuery(bot, client, m, args)
 	default:
 		C.HandleCommandUnknown(bot, m)
-	}
-}
-
-const queryMaxRes = 3
-
-func handleCommandQuery(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.Message, args string) {
-	rows, err := API.QuerySphinx(client, args, queryMaxRes)
-	if err != nil {
-		log.Print(err)
-		return
-	}
-
-	for _, row := range rows {
-		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.Short()))
 	}
 }
