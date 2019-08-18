@@ -76,7 +76,7 @@ func handleInline(bot *tgbotapi.BotAPI, client *http.Client, iq *tgbotapi.Inline
 
 	res := make([]interface{}, 0)
 	for i, row := range rows {
-		res = append(res, tgbotapi.NewInlineQueryResultArticle(string(i), row.Name, row.Short()))
+		res = append(res, tgbotapi.NewInlineQueryResultArticle(string(i), row.Name, row.Formatted()))
 	}
 	answer := tgbotapi.InlineConfig{
 		InlineQueryID: iq.ID,

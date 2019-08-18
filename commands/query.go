@@ -18,6 +18,6 @@ func HandleCommandQuery(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.M
 	}
 
 	for _, row := range rows {
-		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.Short()))
+		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.Formatted()))
 	}
 }
