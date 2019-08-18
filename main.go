@@ -191,25 +191,14 @@ func handleCommand(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.Messag
 	case "start":
 		C.HandleCommandStart(bot, m)
 	case "help":
-		handleCommandHelp(bot, m)
+		C.HandleCommandHelp(bot, m)
 	case "ping":
-		handleCommandPing(bot, m)
+		C.HandleCommandPing(bot, m)
 	case "query":
 		handleCommandQuery(bot, client, m, args)
 	default:
-		handleCommandUnknown(bot, m)
+		C.HandleCommandUnknown(bot, m)
 	}
-}
-
-const helpContent = `/ping : Check if I'm still alive
-/query <string> : Query for release name at predb.ovh`
-
-func handleCommandHelp(bot *tgbotapi.BotAPI, m *tgbotapi.Message) {
-	bot.Send(tgbotapi.NewMessage(m.Chat.ID, helpContent))
-}
-
-func handleCommandPing(bot *tgbotapi.BotAPI, m *tgbotapi.Message) {
-	bot.Send(tgbotapi.NewMessage(m.Chat.ID, "Pong"))
 }
 
 const queryMaxRes = 3
@@ -224,11 +213,6 @@ func handleCommandQuery(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.M
 	for _, row := range rows {
 		bot.Send(tgbotapi.NewMessage(m.Chat.ID, row.short()))
 	}
-}
-
-func handleCommandUnknown(bot *tgbotapi.BotAPI, m *tgbotapi.Message) {
-	msg := tgbotapi.NewMessage(m.Chat.ID, "I didn't understand that. List available commands with /help")
-	bot.Send(msg)
 }
 
 func getEnv(key, defaultValue string) string {
