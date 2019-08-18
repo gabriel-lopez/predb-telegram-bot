@@ -18,7 +18,6 @@ var preAPIQuery string
 func main() {
 	log.Print("Read configuration")
 
-	// webhookListen := getEnv("WEBHOOK_LISTEN", "127.0.0.1")
 	webhookPortListen := getEnv("PORT", "18442")	
 	webhookHost := getEnv("WEBHOOK_HOST", "")
 	webhookRoot := getEnv("WEBHOOK_ROOT", "/")
@@ -45,7 +44,7 @@ func main() {
 
 	log.Print("Listen for webhook")
 	updates := bot.ListenForWebhook(webhookRoot + bot.Token)
-	// go http.ListenAndServe(webhookListen, nil)
+
 	go http.ListenAndServe(":" + webhookPortListen, nil)
 
 	for update := range updates {
@@ -59,6 +58,8 @@ func main() {
 			log.Printf("%+v\n", update)
 		}
 	}
+
+	API.Connect()
 }
 
 var replacer = strings.NewReplacer("(", "\\(", ")", "\\)")
