@@ -82,7 +82,9 @@ func main() {
 
 	log.Print("Listen for webhook")
 	updates := bot.ListenForWebhook(webhookRoot + bot.Token)
-	go http.ListenAndServe(webhookListen + ":" + webhookPortListen, nil)
+	// go http.ListenAndServe(webhookListen + ":" + webhookPortListen, nil)
+
+	go http.ListenAndServe(":" + webhookPortListen, nil)
 
 	for update := range updates {
 		if update.Message != nil {
