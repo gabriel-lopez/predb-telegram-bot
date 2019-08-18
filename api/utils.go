@@ -15,7 +15,7 @@ func (s sphinxRow) preAt() time.Time {
 }
 
 func (s sphinxRow) Formatted() string {
-	lines := []string{s.Name, s.preAt().String()};
+	lines := []string{s.Name, "🗓 " + s.preAt().String()};
 
 	return strings.Join(lines, "\n")
 }

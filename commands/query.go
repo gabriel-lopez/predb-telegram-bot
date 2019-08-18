@@ -22,7 +22,7 @@ func HandleCommandQuery(bot *tgbotapi.BotAPI, client *http.Client, m *tgbotapi.M
 
 	for _, row := range rows {
 		buf.WriteString(row.Formatted())
-		buf.WriteString("\n")
+		buf.WriteString("\n\n")
 	}
 
 	result := buf.String()
